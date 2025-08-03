@@ -1,0 +1,37 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Form Generator</title>
+</head>
+<body>
+    <h1>Generate Google Form</h1>
+    <form id="form">
+        <input type="text" id="title" placeholder="Form Title" required><br><br>
+        <textarea id="questions" rows="10" cols="50" placeholder='[{"question": "What is your name?", "options": ["Alice", "Bob", "Charlie"]}]'></textarea><br><br>
+        <button type="submit">Generate</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        document.getElementById('form').onsubmit = async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const questions = JSON.parse(document.getElementById('questions').value);
+
+            const res = await fetch('/create-form', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, questions })
+            });
+            const data = await res.json();
+
+            if (data.formUrl) {
+                document.getElementById('result').innerHTML = `<a href="${data.formUrl}" target="_blank">Open Generated Form</a>`;
+            } else {
+                document.getElementById('result').innerText = 'Error: ' + data.error;
+            }
+        };
+    </script>
+</body>
+</html>

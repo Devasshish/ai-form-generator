@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: ai-form-generator
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python google_form_generator.py
+    envVars:
+      - key: GOOGLE_APPLICATION_CREDENTIALS
+        value: credentials.json
